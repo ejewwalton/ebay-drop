@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dropship Profit Finder - Multi-Platform Product Research Tool</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #6e8efb, #a777e3);
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .trend-indicator {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+        .platform-tab.active {
+            border-bottom: 3px solid #a777e3;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <header class="gradient-bg text-white shadow-lg">
+        <div class="container mx-auto px-4 py-6">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-3">
+                    <i class="fas fa-rocket text-3xl"></i>
+                    <h1 class="text-2xl font-bold">Dropship Profit Finder</h1>
+                </div>
+                <nav class="hidden md:flex space-x-6">
+                    <a href="#" class="hover:text-gray-200 font-medium">Dashboard</a>
+                    <a href="#" class="hover:text-gray-200 font-medium">Product Research</a>
+                    <a href="#" class="hover:text-gray-200 font-medium">AutoDS Sync</a>
+                    <a href="#" class="hover:text-gray-200 font-medium">Trend Analysis</a>
+                </nav>
+                <button class="md:hidden text-xl">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 py-8">
+        <!-- Search Section -->
+        <section class="mb-12 bg-white rounded-xl shadow-md p-6">
+            <h2 class="text-2xl font-bold mb-6 text-gray-800">Find Profitable Products</h2>
+            <div class="flex flex-col md:flex-row gap-4">
+                <div class="flex-1">
+                    <label for="search" class="block text-sm font-medium text-gray-700 mb-1">Keywords or Product URL</label>
+                    <div class="relative">
+                        <input type="text" id="search" placeholder="e.g. 'fidget spinner', 'LED mask'" 
+                               class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
+                        <button class="absolute right-2 top-2 text-gray-400 hover:text-purple-600">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="w-full md:w-48">
+                    <label for="category" class="block text-sm font-medium text-gray-700 mb-1">Category</label>
+                    <select id="category" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
+                        <option value="">All Categories</option>
+                        <option value="electronics">Electronics</option>
+                        <option value="home">Home & Kitchen</option>
+                        <option value="beauty">Beauty</option>
+                        <option value="toys">Toys & Games</option>
+                        <option value="clothing">Clothing</option>
+                    </select>
+                </div>
+                <div class="flex items-end">
+                    <button class="gradient-bg text-white px-6 py-3 rounded-lg font-medium hover:opacity-90 transition">
+                        Find Products <i class="fas fa-arrow-right ml-2"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="mt-6 flex flex-wrap gap-3">
+                <span class="text-sm font-medium text-gray-700">Quick Filters:</span>
+                <button class="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-sm hover:bg-purple-200">Trending on TikTok</button>
+                <button class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm hover:bg-blue-200">High Profit Margin</button>
+                <button class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm hover:bg-green-200">Fast Shipping</button>
+                <button class="px-3 py-1 bg-yellow-100 text-yellow-700 rounded-full text-sm hover:bg-yellow-200">Low Competition</button>
+            </div>
+        </section>
+
+        <!-- Platform Tabs -->
+        <div class="flex border-b border-gray-200 mb-6">
+            <button class="platform-tab active px-4 py-2 text-purple-600">All Platforms</button>
+            <button class="platform-tab px-4 py-2 text-gray-600 hover:text-purple-600">Amazon</button>
+            <button class="platform-tab px-4 py-2 text-gray-600 hover:text-purple-600">Walmart</button>
+            <button class="platform-tab px-4 py-2 text-gray-600 hover:text-purple-600">AliExpress</button>
+            <button class="platform-tab px-4 py-2 text-gray-600 hover:text-purple-600">TikTok Trends</button>
+        </div>
+
+        <!-- Results Section -->
+        <section>
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-xl font-semibold text-gray-800">Top Product Matches</h3>
+                <div class="flex items-center space-x-4">
+                    <span class="text-sm text-gray-600">Sort by:</span>
+                    <select class="text-sm border border-gray-300 rounded px-3 py-1 focus:ring-purple-500 focus:border-purple-500">
+                        <option>Best Match</option>
+                        <option>Highest Profit</option>
+                        <option>Trend Score</option>
+                        <option>Lowest Price</option>
+                        <option>Fastest Shipping</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Product Card 1 -->
+                <div class="product-card bg-white rounded-xl shadow-md overflow-hidden transition duration-300">
+                    <div class="relative">
+                        <img src="https://m.media-amazon.com/images/I/71YHjVXyR0L._AC_UL320_.jpg" alt="Product" class="w-full h-48 object-contain bg-gray-100">
+                        <div class="absolute top-2 left-2 bg-purple-600 text-white text-xs px-2 py-1 rounded flex items-center">
+                            <span class="trend-indicator mr-1">🔥</span> Viral on TikTok
+                        </div>
+                        <div class="absolute top-2 right-2 bg-white p-1 rounded-full shadow">
+                            <i class="fas fa-heart text-gray-400 hover:text-red-500 cursor-pointer"></i>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <h4 class="font-semibold text-gray-800 mb-1 line-clamp-2">LED Face Mask for Skin Rejuvenation - Red Light Therapy</h4>
+                        <div class="flex items-center mb-2">
+                            <div class="flex text-yellow-400 text-sm">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                            </div>
+                            <span class="text-gray-500 text-xs ml-1">(1,243)</span>
+                        </div>
+                        <div class="grid grid-cols-3 gap-2 mb-3">
+                            <div class="bg-blue-50 p-2 rounded text-center">
+                                <p class="text-xs text-gray-500">Amazon</p>
+                                <p class="font-bold text-blue-600">$39.99</p>
+                            </div>
+                            <div class="bg-green-50 p-2 rounded text-center">
+                                <p class="text-xs text-gray-500">Walmart</p>
+                                <p class="font-bold text-green-600">$42.50</p>
+                            </div>
+                            <div class="bg-red-50 p-2 rounded text-center">
+                                <p class="text-xs text-gray-500">AliExpress</p>
+                                <p class="font-bold text-red-600">$19.99</p>
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <p class="text-xs text-gray-500">Est. eBay Price</p>
+                                <p class="font-bold text-purple-600">$69.99</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-xs text-gray-500">Profit</p>
+                                <p class="font-bold text-green-600">$30+</p>
+                            </div>
+                        </div>
+                        <div class="mt-3 flex justify-between">
+                            <button class="text-xs bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded">
+                                <i class="fas fa-chart-line mr-1"></i> Trends
+                            </button>
+                            <button class="text-xs bg-purple-100 hover:bg-purple-200 text-purple-700 px-3 py-1 rounded">
+                                <i class="fas fa-robot mr-1"></i> AutoDS
+                            </button>
+                            <button class="text-xs bg-blue-100 hover:bg-blue-200 text-blue-700 px-3 py-1 rounded">
+                                <i class="fas fa-shopping-cart mr-1"></i> Source
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product Card 2 -->
+                <div class="product-card bg-white rounded-xl shadow-md overflow-hidden transition duration-300">
+                    <div class="relative">
+                        <img src="https://m.media-amazon.com/images/I/71YHjVXyR0L._AC_UL320_.jpg" alt="Product" class="w-full h-48 object-contain bg-gray-100">
+                        <div class="absolute top-2 left-2 bg-blue-600 text-white text-xs px-2 py-1 rounded">
+                            <i class="fas fa-bolt mr-1"></i> Fast Shipping
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <h4 class="font-semibold text-gray-800 mb-1 line-clamp-2">Magnetic Levitation Floating Globe - Cool Desk Decor</h4>
+                        <div class="flex items-center mb-2">
+                            <div class="flex text-yellow-400 text-sm">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="far fa-star"></i>
+                            </div>
+                            <span class="text-gray-500 text-xs ml-1">(892)</span>
+                        </div>
+                        <div class="grid grid-cols-3 gap-2 mb-3">
+                            <div class="bg-blue-50 p-2 rounded text-center">
+                                <p class="text-xs text-gray-500">Amazon</p>
+                                <p class="font-bold text-blue-600">$59.99</p>
+                            </div>
+                            <div class="bg-green-50 p-2 rounded text-center">
+                                <p class="text-xs text-gray-500">Walmart</p>
+                                <p class="font-bold text-green-600">$62.99</p>
+                            </div>
+                            <div class="bg-red-50 p-2 rounded text-center">
+                                <p class="text-xs text-gray-500">AliExpress</p>
+                                <p class="font-bold text-red-600">$27.50</p>
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <p class="text-xs text-gray-500">Est. eBay Price</p>
+                                <p class="font-bold text-purple-600">$79.99</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-xs text-gray-500">Profit</p>
+                                <p class="font-bold text-green-600">$20+</p>
+                            </div>
+                        </div>
+                        <div class="mt-3 flex justify-between">
+                            <button class="text-xs bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded">
+                                <i class="fas fa-chart-line mr-1"></i> Trends
+                            </button>
+                            <button class="text-xs bg-purple-100 hover:bg-purple-200 text-purple-700 px-3 py-1 rounded">
+                                <i class="fas fa-robot mr-1"></i> AutoDS
+                            </button>
+                            <button class="text-xs bg-blue-100 hover:bg-blue-200 text-blue-700 px-3 py-1 rounded">
+                                <i class="fas fa-shopping-cart mr-1"></i> Source
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product Card 3 -->
+                <div class="product-card bg-white rounded-xl shadow-md overflow-hidden transition duration-300">
+                    <div class="relative">
+                        <img src="https://m.media-amazon.com/images/I/71YHjVXyR0L._AC_UL320_.jpg" alt="Product" class="w-full h-48 object-contain bg-gray-100">
+                        <div class="absolute top-2 left-2 bg-green-600 text-white text-xs px-2 py-1 rounded flex items-center">
+                            <i class="fas fa-trophy mr-1"></i> Best Seller
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <h4 class="font-semibold text-gray-800 mb-1 line-clamp-2">Portable Car Vacuum Cleaner - 150W Strong Suction</h4>
+                        <div class="flex items-center mb-2">
+                            <div class="flex text-yellow-400 text-sm">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <span class="text-gray-500 text-xs ml-1">(3,457)</span>
+                        </div>
+                        <div class="grid grid-cols-3 gap-2 mb-3">
+                            <div class="bg-blue-50 p-2 rounded text-center">
+                                <p class="text-xs text-gray-500">Amazon</p>
+                                <p class="font-bold text-blue-600">$35.99</p>
+                            </div>
+                            <div class="bg-green-50 p-2 rounded text-center">
+                                <p class="text-xs text-gray-500">Walmart</p>
+                                <p class="font-bold text-green-600">$38.25</p>
+                            </div>
+                            <div class="bg-red-50 p-2 rounded text-center">
+                                <p class="text-xs text-gray-500">AliExpress</p>
+                                <p class="font-bold text-red-600">$18.75</p>
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <p class="text-xs text-gray-500">Est. eBay Price</p>
+                                <p class="font-bold text-purple-600">$49.99</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-xs text-gray-500">Profit</p>
+                                <p class="font-bold text-green-600">$14+</p>
+                            </div>
+                        </div>
+                        <div class="mt-3 flex justify-between">
+                            <button class="text-xs bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded">
+                                <i class="fas fa-chart-line mr-1"></i> Trends
+                            </button>
+                            <button class="text-xs bg-purple-100 hover:bg-purple-200 text-purple-700 px-3 py-1 rounded">
+                                <i class="fas fa-robot mr-1"></i> AutoDS
+                            </button>
+                            <button class="text-xs bg-blue-100 hover:bg-blue-200 text-blue-700 px-3 py-1 rounded">
+                                <i class="fas fa-shopping-cart mr-1"></i> Source
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-8 flex justify-center">
+                <button class="gradient-bg text-white px-6 py-2 rounded-lg font-medium hover:opacity-90 transition">
+                    Load More Products <i class="fas fa-sync-alt ml-2"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- Trend Analysis Section -->
+        <section class="mt-12 bg-white rounded-xl shadow-md p-6">
+            <h2 class="text-2xl font-bold mb-6 text-gray-800">TikTok Trend Analysis</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="border border-gray-200 rounded-lg p-4 hover:border-purple-300 transition">
+                    <div class="flex items-center mb-3">
+                        <div class="bg-purple-100 p-2 rounded-full mr-3">
+                            <i class="fas fa-hashtag text-purple-600"></i>
+                        </div>
+                        <h3 class="font-semibold">#HomeGadgets</h3>
+                    </div>
+                    <p class="text-gray-600 text-sm mb-3">1.2M posts this week (+45% from last week)</p>
+                    <div class="flex justify-between text-xs">
+                        <span class="text-gray-500">Top Product: Smart Humidifier</span>
+                        <span class="text-green-500 font-medium">+72% interest</span>
+                    </div>
+                </div>
+                <div class="border border-gray-200 rounded-lg p-4 hover:border-purple-300 transition">
+                    <div class="flex items-center mb-3">
+                        <div class="bg-blue-100 p-2 rounded-full mr-3">
+                            <i class="fas fa-hashtag text-blue-600"></i>
+                        </div>
+                        <h3 class="font-semibold">#BeautyTech</h3>
+                    </div>
+                    <p class="text-gray-600 text-sm mb-3">850K posts this week (+68% from last week)</p>
+                    <div class="flex justify-between text-xs">
+                        <span class="text-gray-500">Top Product: LED Mask</span>
+                        <span class="text-green-500 font-medium">+120% interest</span>
+                    </div>
+                </div>
+                <div class="border border-gray-200 rounded-lg p-4 hover:border-purple-300 transition">
+                    <div class="flex items-center mb-3">
+                        <div class="bg-pink-100 p-2 rounded-full mr-3">
+                            <i class="fas fa-hashtag text-pink-600"></i>
+                        </div>
+                        <h3 class="font-semibold">#DeskSetup</h3>
+                    </div>
+                    <p class="text-gray-600 text-sm mb-3">2.1M posts this week (+32% from last week)</p>
+                    <div class="flex justify-between text-xs">
+                        <span class="text-gray-500">Top Product: Floating Globe</span>
+                        <span class="text-green-500 font-medium">+55% interest</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- AutoDS Integration Section -->
+        <section class="mt-12 gradient-bg text-white rounded-xl shadow-md p-6">
+            <div class="flex flex-col md:flex-row items-center">
+                <div class="flex-1 mb-6 md:mb-0">
+                    <h2 class="text-2xl font-bold mb-3">AutoDS Integration</h2>
+                    <p class="mb-4 opacity-90">Seamlessly import profitable products directly to your eBay store with AutoDS automation.</p>
+                    <ul class="space-y-2">
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle mr-2"></i> Automatic price & stock updates
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle mr-2"></i> One-click order processing
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle mr-2"></i> Smart repricing strategies
+                        </li>
+                    </ul>
+                </div>
+                <div class="w-full md:w-64">
+                    <button class="w-full bg-white text-purple-600 px-6 py-3 rounded-lg font-medium hover:bg-gray-100 transition flex items-center justify-center">
+                        <i class="fas fa-robot text-xl mr-2"></i> Connect AutoDS
+                    </button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-gray-800 text-white py-8 mt-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="font-bold text-lg mb-4">Dropship Profit Finder</h3>
+                    <p class="text-gray-400 text-sm">The ultimate tool for finding profitable dropshipping products across multiple platforms.</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-4">Features</h4>
+                    <ul class="space-y-2 text-gray-400 text-sm">
+                        <li><a href="#" class="hover:text-white">Product Research</a></li>
+                        <li><a href="#" class="hover:text-white">Price Comparison</a></li>
+                        <li><a href="#" class="hover:text-white">Trend Analysis</a></li>
+                        <li><a href="#" class="hover:text-white">AutoDS Integration</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-4">Resources</h4>
+                    <ul class="space-y-2 text-gray-400 text-sm">
+                        <li><a href="#" class="hover:text-white">Blog</a></li>
+                        <li><a href="#" class="hover:text-white">Tutorials</a></li>
+                        <li><a href="#" class="hover:text-white">Dropshipping Guide</a></li>
+                        <li><a href="#" class="hover:text-white">API Documentation</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-4">Contact</h4>
+                    <ul class="space-y-2 text-gray-400 text-sm">
+                        <li class="flex items-center">
+                            <i class="fas fa-envelope mr-2"></i> support@dropshipprofitfinder.com
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fab fa-discord mr-2"></i> Join our Discord
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fab fa-twitter mr-2"></i> @DropshipFinder
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-8 pt-6 text-center text-gray-400 text-sm">
+                <p>© 2023 Dropship Profit Finder. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Platform tabs functionality
+        document.querySelectorAll('.platform-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.platform-tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                // Here you would add logic to filter products by platform
+            });
+        });
+
+        // Simulate loading more products
+        document.querySelector('button:contains("Load More Products")').addEventListener('click', function() {
+            // In a real app, this would fetch more products from your API
+            alert('Loading more products...');
+        });
+
+        // Connect AutoDS button
+        document.querySelector('button:contains("Connect AutoDS")').addEventListener('click', function() {
+            // In a real app, this would initiate the AutoDS OAuth flow
+            alert('Redirecting to AutoDS for authentication...');
+        });
+
+        // Search functionality
+        document.querySelector('button:contains("Find Products")').addEventListener('click', function() {
+            const searchTerm = document.getElementById('search').value;
+            const category = document.getElementById('category').value;
+            // In a real app, this would fetch products based on search criteria
+            console.log(`Searching for ${searchTerm} in category ${category}`);
+        });
+    </script>
+<p style="border-radius: 8px; text-align: center; font-size: 12px; color: #fff; margin-top: 16px;position: fixed; left: 8px; bottom: 8px; z-index: 10; background: rgba(0, 0, 0, 0.8); padding: 4px 8px;">Made with <img src="https://enzostvs-deepsite.hf.space/logo.svg" alt="DeepSite Logo" style="width: 16px; height: 16px; vertical-align: middle;display:inline-block;margin-right:3px;filter:brightness(0) invert(1);"><a href="https://enzostvs-deepsite.hf.space" style="color: #fff;text-decoration: underline;" target="_blank" >DeepSite</a> - 🧬 <a href="https://enzostvs-deepsite.hf.space?remix=Ejewwalton/ebay-prod-research" style="color: #fff;text-decoration: underline;" target="_blank" >Remix</a></p></body>
+</html>
